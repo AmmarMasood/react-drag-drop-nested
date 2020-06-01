@@ -1,0 +1,33 @@
+.area-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 20fr;
+  height: 79vh;
+}
+.area-main-btn {
+  border-bottom: 5px solid transparent;
+}
+
+.area-childern {
+  background-color: #ececec;
+  display: flex;
+  flex-wrap: nowrap;
+  /* width: 100%; */
+  overflow: scroll;
+  /* border: 2px solid blue; */
+}
+
+.area-child-main {
+  display: flex;
+  flex-wrap: nowrap;
+  border: 2px solid red;
+  min-height: 500px;
+  height: fit-content;
+}
+
+.showItems {
+  border: 2px solid red;
+  margin-top: -20px;
+  text-align: left;
+  width: 100%;
+}
