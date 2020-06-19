@@ -8,7 +8,6 @@ import ItemChild from "../Items/ItemsChild";
 
 function AreaChild({
   area,
-  key,
   items,
   createItem,
   index,
@@ -16,79 +15,18 @@ function AreaChild({
   onAreaRemove,
   handleChangeColor,
   onItemFieldEdit,
-  setDisabledFields
+  setDisabledFields,
+  onActiveDataSelect
 }) {
-  // a little function to help us with reordering the result
-
-  // const getAreas = () => (
-  //   <Card
-  //     size="large"
-  //     key
-  //     title={
-  //       <div
-  //         style={{
-  //           border: "2px solid red",
-  //           width: "100%",
-  //           cursor: "grab"
-  //         }}
-  //       >
-  //         <Input
-  //           style={{ width: "50%" }}
-  //           value={area.areaTitle}
-  //           // onChange={e => changeTitle(e, p.areaId)}
-  //         />
-  //       </div>
-  //     }
-  //     extra={
-  //       <Button
-  //         type="primary"
-  //         shape="circle"
-  //         icon={<CloseOutlined />}
-  //         size={"small"}
-  //       />
-  //     }
-  //     style={{
-  //       width: 500,
-  //       margin: "5px",
-  //       minHeight: 400
-  //     }}
-  //   >
-  //     <div className="showItems">
-  //       <Button
-  //         type="primary"
-  //         shape="square"
-  //         icon={<PlusOutlined />}
-  //         size={"small"}
-  //         onClick={() => createItem(area.areaId)}
-  //       />
-  //       <Droppable droppableId={area.areaId}>
-  //         {provided => (
-  //           <div
-  //             className="child-list"
-  //             innerRef={provided.innerRef}
-  //             {...provided.droppableProps}
-  //           >
-  //             {items.map((item, index) => (
-  //               <ItemChild
-  //                 key={item.itemId}
-  //                 item={item}
-  //                 createItem={createItem}
-  //                 index={index}
-  //               />
-  //             ))}
-  //             {provided.placeholder}
-  //           </div>
-  //         )}
-  //       </Droppable>
-  //     </div>
-  //   </Card>
-  // );
-  const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "white"
-    // display: "flex",
-    // padding: 0,
-    // width: "100%",
-    // overflow: "scroll"
+  const getListStyle = (isDraggingOver, area) => ({
+    background: isDraggingOver ? "lightblue" : "white",
+    display: "grid",
+    gridTemplateColumns: `repeat(${area.x}, 1fr)`,
+    gridAutoRows: `repeat(${area.y}, 1fr)`,
+    gridGap: "5px",
+    height: "100%",
+    width: "100%",
+    padding: "10px"
   });
 
   return (
@@ -107,7 +45,8 @@ function AreaChild({
               <div
                 {...provided.dragHandleProps}
                 style={{
-                  border: "2px solid red",
+                  border: "1px solid #c1c1c1",
+                  padding: "2px",
                   width: "100%",
                   cursor: "grab"
                 }}
@@ -129,7 +68,7 @@ function AreaChild({
               />
             }
             style={{
-              width: 500,
+              width: `${area.x * 280}px`,
               margin: "5px"
               // minHeight: 400,
             }}
@@ -140,18 +79,15 @@ function AreaChild({
                 shape="square"
                 icon={<PlusOutlined />}
                 size={"small"}
+                disabled={area.itemIds.length === area.x * area.y}
                 onClick={() => createItem(area.areaId)}
               />
-              <Droppable
-                droppableId={area.areaId}
-                // direction="horizontal"
-                type="items"
-              >
+
+              <Droppable droppableId={area.areaId} type="items">
                 {(provided, snapshot) => (
                   <div
-                    className="child-list"
                     ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
+                    style={getListStyle(snapshot.isDraggingOver, area)}
                     {...provided.droppableProps}
                   >
                     {items.map((item, index) => (
@@ -163,6 +99,7 @@ function AreaChild({
                         handleChangeColor={handleChangeColor}
                         onItemFieldEdit={onItemFieldEdit}
                         setDisabledFields={setDisabledFields}
+                        onActiveDataSelect={onActiveDataSelect}
                       />
                     ))}
                     {provided.placeholder}

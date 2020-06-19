@@ -1,5 +1,5 @@
 .items-main {
-  border: 2px solid red;
+  /* border: 2px solid red; */
   display: grid;
   grid-template-columns: 1fr;
   padding: 20px;
@@ -7,20 +7,30 @@
 }
 
 .items-main--btn {
-  border: 2px solid yellow;
+  /* border: 2px solid yellow; */
   text-align: right;
 }
 .items-main--list {
-  border: 2px solid green;
+  /* border: 2px solid green; */
 }
 
 .child-list {
-  border: 2px solid blue;
-  padding: 10px;
-  display: grid;
+  /* border: 2px solid blue; */
+  /* padding: 10px; */
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
-  grid-gap: 5px;
-  height: 100%;
-  width: 100%;
+  grid-gap: 5px; */
+  /* height: 100%;
+  width: 100%; */
+}
+.list-panel {
+  height: 150px;
+  overflow-y: scroll;
+}
+.list-item-style {
+  cursor: pointer;
+}
+.list-item-style:hover {
+  background-color: rgba(24, 144, 255, 0.3);
 }

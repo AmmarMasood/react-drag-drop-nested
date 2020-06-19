@@ -1,6 +1,8 @@
 import React from "react";
 import { PageHeader, Button, Descriptions } from "antd";
 import "./Nav.css";
+import { Link } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 
 function Nav() {
   return (
@@ -8,14 +10,15 @@ function Nav() {
       <PageHeader
         ghost={false}
         // onBack={() => window.history.back()}
-        title="Title"
+        // title="Title"
         // subTitle="This is a subtitle"
         extra={[
-          <Button key="3">Operation</Button>,
-          <Button key="2">Operation</Button>,
-          <Button key="1" type="primary">
-            Primary
-          </Button>
+          <Link to="/">
+            <Button key="1" type="primary">
+              <UserOutlined />
+              Log Out
+            </Button>
+          </Link>
         ]}
       >
         {/* <Descriptions size="small" column={3}>

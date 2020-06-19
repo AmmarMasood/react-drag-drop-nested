@@ -1,74 +1,69 @@
-import React, { useState, useContext } from "react";
-import { Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, notification, Modal, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./AreaParent.css";
 import AreaChild from "./AreaChild";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import ItemsParent from "../Items/ItemsParent";
-import Column from "rc-table/lib/sugar/Column";
+import axios from "axios";
+import { server } from "../../Utils/Server";
 
 function AreaParent({ roomId }) {
+  // area dimentsion popover
+  const [visible, setVisible] = useState(false);
+  // current added area dimensions input
+  // stores the temp value of x and y
+  const [tempDimension, setTempDimension] = useState({ x: 1, y: 1 });
   const [areaIdn, setAreaIdn] = useState(`area-${Date.now() + Math.random()}`);
-  const [itemIdn, setItemIdn] = useState(`item-${Date.now() + Math.random()}`);
+  // const [itemIdn, setItemIdn] = useState(`item-${Date.now() + Math.random()}`);
   const [state, setState] = useState({
     areas: {
-      [areaIdn]: {
-        roomId: roomId,
-        areaTitle: "New Area",
-        areaId: areaIdn,
-        itemIds: [itemIdn]
-      }
+      // [areaIdn]: {
+      //   roomId: roomId,
+      //   areaTitle: "New Area",
+      //   areaId: areaIdn,
+      //   itemIds: [],
+      //   x: 1,
+      //   y: 1
+      // }
     },
     items: {
-      [itemIdn]: {
-        itemTitle: "Item 1",
-        roomId: roomId,
-        itemId: itemIdn,
-        fields: [
-          "Data field 1",
-          "Data field 2",
-          "Data field 3",
-          "Data field 4"
-        ],
-        disableField: true,
-        bgColor: "#ffffff"
-      }
+      // [itemIdn]: {
+      //   itemTitle: "Item 1",
+      //   roomId: roomId,
+      //   itemId: itemIdn,
+      //   fields: [
+      //     "Data field 1",
+      //     "Data field 2",
+      //     "Data field 3",
+      //     "Data field 4"
+      //   ],
+      //   disableField: true,
+      //   bgColor: "#ffffff"
+      // }
     },
-    areaOrder: [areaIdn],
-    itemTitles: [1, 1]
+    areaOrder: [],
+    itemTitles: [0]
   });
 
-  // const removeArea = id => {
-  //   const n = areas.filter(o => o.areaId !== id);
-  //   setAreas(n);
+  // this function updates the state every 40 seconds(backend script should be uncommented)
+  // useEffect(() => {
+  //   loadData();
+  //   setInterval(loadData, 30000);
+  // }, []);
+
+  // const loadData = () => {
+  //   axios
+  //     .get(`${server}/state/get-state`)
+  //     .then(res => setState(res.data))
+  //     .catch(err => console.log("error " + err));
   // };
 
-  // const onCreateArea = () => {
-  //   var newId = Date.now() + Math.random();
-  //   if (areas.length > 0) {
-  //     var n = areas[areas.length - 1].areaId.replace(/[^0-9]/g, "");
-  //     newId = parseInt(n, 10) + Date.now() + Math.random();
-  //   }
-  //   const object = {
-  //     roomId,
-  //     areaTitle: "New Area",
-  //     areaId: `area-${newId}`,
-  //     items: <ItemsParent roomId areaId />
-  //   };
-
-  //   setAreas([...areas, object]);
-  //   console.log(areas);
-  // };
-
-  // const changeTitle = (e, id) => {
-  //   for (var i in areas) {
-  //     if (areas[i].areaId == id) {
-  //       areas[i].areaTitle = e.target.value; //new value
-  //       setAreas([...areas]); //update the value
-  //       break;
-  //     }
-  //   }
-  // };
+  const openNotificationWithIcon = (type, err) => {
+    notification[type]({
+      message: "Error while loading the Serials from backend.",
+      description: `${err}`
+    });
+  };
 
   const setDisabledFields = (itemId, check) => {
     const newState = {
@@ -84,6 +79,15 @@ function AreaParent({ roomId }) {
     setState(newState);
   };
   const createItem = areaId => {
+    // serials for each item goes here:
+    let serial = [];
+
+    // Backend script to populate the serial numbers in item
+    // axios
+    //   .get(`${server}/item/get-serials`)
+    //   .then(res => (serial = res.data))
+    //   .catch(err => openNotificationWithIcon("error", err));
+
     const itemId = `item-${Date.now() + Math.random()}`;
     const itemTitle =
       state.itemTitles.length === 0
@@ -111,14 +115,17 @@ function AreaParent({ roomId }) {
             "Data field 4"
           ],
           disableField: true,
-          bgColor: "#ffffff"
+          bgColor: "#ffffff",
+          serial: serial
         }
       },
 
       itemTitles: [...prevState.itemTitles, itemTitle]
     }));
-    console.log(state);
-    console.log(itemTitle);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   const onItemFieldEdit = (fields, itemId) => {
@@ -133,7 +140,10 @@ function AreaParent({ roomId }) {
       }
     };
     setState(newState);
-
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
     return;
   };
 
@@ -150,32 +160,37 @@ function AreaParent({ roomId }) {
           roomId: roomId,
           areaTitle: "New Area",
           areaId: areaId,
-          itemIds: []
+          itemIds: [],
+          x: tempDimension.x,
+          y: tempDimension.y
         }
       },
       areaOrder: [...prevState.areaOrder, areaId]
     }));
-    console.log(state);
-    console.log(itemTitle);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
-  // const getCards = () => {
-  //   return state.areaOrder.map(areaId => {
-  //     const area = state.areas[areaId];
-  //     const items = area.itemIds.map(itemId => state.items[itemId]);
-  //     // console.log(areaId);
-  //     // console.log(state);
-  //     return (
-  //       <AreaChild
-  //         key={areaId}
-  //         area={area}
-  //         items={items}
-  //         createItem={createItem}
-  //       />
-  //     );
-  //   });
-  //   // console.log(state);
-  // };
+  // changes the fields in item to active-data selected in ItemsChild
+  const onActiveDataSelect = (itemId, d) => {
+    const newState = {
+      ...state,
+      items: {
+        ...state.items,
+        [itemId]: {
+          ...state.items[itemId],
+          fields: d
+        }
+      }
+    };
+    setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
+  };
 
   const changeAreaTitle = (e, areaId) => {
     const newState = {
@@ -189,6 +204,10 @@ function AreaParent({ roomId }) {
       }
     };
     setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   const onDragEnd = result => {
@@ -214,6 +233,10 @@ function AreaParent({ roomId }) {
         areaOrder: newAreaOrder
       };
       setState(newState);
+      // backend script to save the area in backend
+      // axios.post(`${server}/add-area`, state)
+      // .then(res => console.log(res))
+      // .catch(err => console.log(err))
       return;
     }
 
@@ -242,7 +265,17 @@ function AreaParent({ roomId }) {
       };
 
       setState(newState);
-      console.log(state.items);
+      // console.log(state.items);
+      // backend script to save the area in backend
+      // axios.post(`${server}/add-area`, state)
+      // .then(res => console.log(res))
+      // .catch(err => console.log(err))
+      return;
+    }
+
+    if (finnsh.x * finnsh.y === finnsh.itemIds.length) {
+      // console.log(finnsh.x * start.y);
+      // console.log(finnsh.itemIds.length);
       return;
     }
     const startItemIds = Array.from(start.itemIds);
@@ -267,6 +300,10 @@ function AreaParent({ roomId }) {
       }
     };
     setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   // this function will be used to get nnumber from array of itemIds
@@ -323,6 +360,10 @@ function AreaParent({ roomId }) {
     };
     delete newState.areas[areaId];
     setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
     return;
   };
 
@@ -340,62 +381,115 @@ function AreaParent({ roomId }) {
     };
 
     setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
     return;
   };
 
+  // area modal if user clicks on ok
+  const areaModalHandleOk = () => {
+    setVisible(false);
+    addArea();
+  };
+
+  const areaModalHandleCancel = () => {
+    setTempDimension({ x: 1, y: 1 });
+    setVisible(false);
+  };
+
+  const onXdimensionChange = value => {
+    setTempDimension({ ...tempDimension, x: value });
+  };
+  const onYdimensionChange = value => {
+    setTempDimension({ ...tempDimension, y: value });
+  };
   return (
-    <div className="area-main">
-      <div className="area-main-btn">
-        <Button
-          style={{ right: 0 }}
-          // onClick={onCreateArea}
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={addArea}
-        >
-          Add Area
-        </Button>
-      </div>
-      <div className="area-childern">
-        <DragDropContext onDragEnd={result => onDragEnd(result)}>
-          <Droppable
-            droppableId="all-column"
-            direction="horizontal"
-            type="areas"
+    <>
+      <div className="area-main">
+        <div className="area-main-btn">
+          {/* area input x and y modal starts */}
+          <Modal
+            title="Enter Dimensions"
+            visible={visible}
+            onOk={areaModalHandleOk}
+            onCancel={areaModalHandleCancel}
           >
-            {provided => (
-              <div
-                className="area-child-main"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {state.areaOrder.map((areaId, index) => {
-                  const area = state.areas[areaId];
-                  const items = area.itemIds.map(itemId => state.items[itemId]);
-                  // console.log(areaId);
-                  // console.log(state);
-                  return (
-                    <AreaChild
-                      index={index}
-                      key={areaId}
-                      area={area}
-                      items={items}
-                      createItem={createItem}
-                      changeAreaTitle={changeAreaTitle}
-                      onAreaRemove={onAreaRemove}
-                      handleChangeColor={handleChangeColor}
-                      onItemFieldEdit={onItemFieldEdit}
-                      setDisabledFields={setDisabledFields}
-                    />
-                  );
-                })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+            <div style={{ padding: "10px", textAlign: "center" }}>
+              <label>X: </label>
+              <InputNumber
+                min={1}
+                max={100}
+                value={tempDimension.x}
+                onChange={onXdimensionChange}
+                style={{ margin: "10px" }}
+              />
+              <label>Y: </label>
+              <InputNumber
+                min={1}
+                max={100}
+                value={tempDimension.y}
+                onChange={onYdimensionChange}
+                style={{ margin: "10px" }}
+              />
+            </div>
+          </Modal>
+          {/* area input x and y modal ends */}
+          <Button
+            style={{ right: 0 }}
+            // onClick={onCreateArea}
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setVisible(true)}
+          >
+            Add Area
+          </Button>
+        </div>
+        <div className="area-childern">
+          <DragDropContext onDragEnd={result => onDragEnd(result)}>
+            <Droppable
+              droppableId="all-column"
+              direction="horizontal"
+              type="areas"
+            >
+              {provided => (
+                <div
+                  className="area-child-main"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {state.areaOrder.map((areaId, index) => {
+                    const area = state.areas[areaId];
+                    const items = area.itemIds.map(
+                      itemId => state.items[itemId]
+                    );
+                    // console.log(areaId);
+                    // console.log(state);
+                    return (
+                      <AreaChild
+                        index={index}
+                        key={areaId}
+                        area={area}
+                        items={items}
+                        createItem={createItem}
+                        changeAreaTitle={changeAreaTitle}
+                        onAreaRemove={onAreaRemove}
+                        handleChangeColor={handleChangeColor}
+                        onItemFieldEdit={onItemFieldEdit}
+                        setDisabledFields={setDisabledFields}
+                        onActiveDataSelect={onActiveDataSelect}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

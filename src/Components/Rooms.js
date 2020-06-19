@@ -1,8 +1,9 @@
 import React from "react";
-import { Tabs } from "antd";
-import { Input } from "antd";
+import { Tabs, Input } from "antd";
 import AreaParent from "./Areas/AreaParent";
 import "./Room.css";
+import { server } from "../Utils/Server";
+import axios from "axios";
 
 const { TabPane } = Tabs;
 
@@ -19,6 +20,13 @@ class Rooms extends React.Component {
     };
   }
 
+  componentDidMount() {
+    // backend script to add tab into backend (should be uncommented)
+    // axios.post(`${server}/update/room`, this.state.panes)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
+  }
+
   onChange = activeKey => {
     this.setState({ activeKey });
   };
@@ -28,7 +36,7 @@ class Rooms extends React.Component {
   };
 
   onTableTitleChange = (e, key) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     for (var i in this.state.panes) {
       if (this.state.panes[i].key == key) {
         let panes = [...this.state.panes]; // create the copy of state array
@@ -37,6 +45,10 @@ class Rooms extends React.Component {
         break;
       }
     }
+    // backend script to change tab title in backend (should be uncommented)
+    // axios.post(`${server}/update/room`, this.state.panes)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   add = () => {
@@ -48,6 +60,10 @@ class Rooms extends React.Component {
       key: activeKey
     });
     this.setState({ panes, activeKey });
+    // backend script to add tab into backend (should be uncommented)
+    // axios.post(`${server}/update/room`, this.state.panes)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   remove = targetKey => {
@@ -67,6 +83,10 @@ class Rooms extends React.Component {
       }
     }
     this.setState({ panes, activeKey });
+    // backend script to add tab into backend (should be uncommented)
+    // axios.post(`${server}/update/room`, this.state.panes)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
   };
 
   render() {
