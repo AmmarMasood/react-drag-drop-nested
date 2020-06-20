@@ -246,8 +246,8 @@ function AreaParent({ roomId }) {
     const finnsh = state.areas[destination.droppableId];
 
     if (start === finnsh) {
-      console.log(source);
-      console.log(destination);
+      // console.log(source);
+      // console.log(destination);
       const newItemIds = Array.from(start.itemIds);
       newItemIds.splice(source.index, 1);
       newItemIds.splice(destination.index, 0, draggableId);
@@ -348,8 +348,8 @@ function AreaParent({ roomId }) {
       el => !stringOfArrayToNumbers(c).includes(el)
     );
     // stringOfArrayToNumbers(c);
-    console.log(newItemTitles);
-    console.log(c);
+    // console.log(newItemTitles);
+    // console.log(c);
     // end
 
     const newState = {
@@ -368,7 +368,7 @@ function AreaParent({ roomId }) {
   };
 
   const handleChangeColor = (color, e, itemId) => {
-    console.log(color, e, itemId);
+    // console.log(color, e, itemId);
     const newState = {
       ...state,
       items: {

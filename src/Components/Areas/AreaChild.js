@@ -21,8 +21,8 @@ function AreaChild({
   const getListStyle = (isDraggingOver, area) => ({
     background: isDraggingOver ? "lightblue" : "white",
     display: "grid",
-    gridTemplateColumns: `repeat(${area.x}, 1fr)`,
-    gridAutoRows: `repeat(${area.y}, 1fr)`,
+    gridTemplateColumns: `repeat(${area.y}, 1fr)`,
+    gridAutoRows: `repeat(${area.x}, 1fr)`,
     gridGap: "5px",
     height: "100%",
     width: "100%",
@@ -68,7 +68,7 @@ function AreaChild({
               />
             }
             style={{
-              width: `${area.x * 280}px`,
+              width: `${area.y * 280}px`,
               margin: "5px"
               // minHeight: 400,
             }}

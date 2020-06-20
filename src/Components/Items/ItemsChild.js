@@ -63,7 +63,7 @@ function ItemsChild({
   // };
   // on modal stuff ends
   const onCheckChange = (itemId, check) => {
-    console.log(!check);
+    // console.log(!check);
     setDisabledFields(itemId, !check);
   };
   // notification for successfully selected serial
