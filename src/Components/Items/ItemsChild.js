@@ -24,44 +24,12 @@ function ItemsChild({
   handleChangeColor,
   // onItemFieldEdit,
   setDisabledFields,
-  onActiveDataSelect
+  onActiveDataSelect,
+  onRemoveItem,
+  areaId
 }) {
-  // const [displayColorPicker, setDisplayColorPicker] = useState(false);
-  // const [fields, setFields] = useState([]);
-  // const [currentId, setCurrentId] = useState("");
-  // const [openModal, setOpenModal] = useState(false);
-  const [activeData, setActiveData] = useState([
-    // ["asds", "asd", "asds", "asdas"],
-    // ["asd", "asd", "asds", "asdas"],
-    // ["asd", "asd", "asds", "asdas"],
-    // ["asd", "asd", "asds", "asdas"],
-    // ["asd", "asd", "asds", "asdas"]
-  ]);
-  // all modal stuff start
-  // const showModal = (itemFields, itemId) => {
-  //   setCurrentId(itemId);
-  //   setFields(itemFields);
-  //   setOpenModal(true);
-  // };
+  const [activeData, setActiveData] = useState([]);
 
-  // const handleOk = () => {
-  //   onItemFieldEdit(fields, currentId);
-  //   setFields([]);
-  //   setCurrentId("");
-  //   setOpenModal(false);
-  // };
-
-  // const handleCancel = () => {
-  //   setFields([]);
-  //   setOpenModal(false);
-  // };
-
-  // const onFieldItemHandle = (value, index) => {
-  //   var newFields = [...fields];
-  //   newFields[index] = value;
-  //   setFields(newFields);
-  // };
-  // on modal stuff ends
   const onCheckChange = (itemId, check) => {
     // console.log(!check);
     setDisabledFields(itemId, !check);
@@ -108,6 +76,15 @@ function ItemsChild({
   // content in options
   const content = item => (
     <div style={{ textAlign: "right" }}>
+      <div style={{ margin: "10px" }}>
+        <Button
+          type="primary"
+          danger
+          onClick={() => onRemoveItem(item.itemId, areaId, item.itemTitle)}
+        >
+          Remove
+        </Button>
+      </div>
       <TwitterPicker
         onChange={(color, e) => handleChangeColor(color, e, item.itemId)}
       />
@@ -148,6 +125,7 @@ function ItemsChild({
           </div>
         </Collapse.Panel>
       </Collapse>
+
       <br />
       <Switch
         checkedChildren="Disable Fields"
@@ -160,41 +138,6 @@ function ItemsChild({
   );
   return (
     <>
-      {/* for editable fields */}
-      {/* <Modal
-        title="Edit Fields"
-        visible={openModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <div> */}
-      {/* <ChromePicker /> */}
-      {/* <Input
-            style={{ margin: "2px" }}
-            size="medium"
-            value={fields[0]}
-            onChange={e => onFieldItemHandle(e.target.value, 0)}
-          />
-          <Input
-            style={{ margin: "2px" }}
-            size="medium"
-            value={fields[1]}
-            onChange={e => onFieldItemHandle(e.target.value, 1)}
-          />
-          <Input
-            style={{ margin: "2px" }}
-            size="medium"
-            value={fields[2]}
-            onChange={e => onFieldItemHandle(e.target.value, 2)}
-          />
-          <Input
-            style={{ margin: "2px" }}
-            size="medium"
-            value={fields[3]}
-            onChange={e => onFieldItemHandle(e.target.value, 3)}
-          />
-        </div>
-      </Modal> */}
       <Draggable draggableId={item.itemId} index={index}>
         {(provided, snapshot) => (
           <div
@@ -227,7 +170,6 @@ function ItemsChild({
                   placeholder="small size"
                   value={item.fields[0]}
                   disabled={!item.disableField}
-                  // onChange={() => showModal(item.fields, item.itemId)}
                 />
                 <Input
                   style={{ margin: "2px" }}
@@ -235,7 +177,6 @@ function ItemsChild({
                   placeholder="small size"
                   value={item.fields[1]}
                   disabled={!item.disableField}
-                  // onChange={() => showModal(item.fields, item.itemId)}
                 />
                 <Input
                   style={{ margin: "2px" }}
@@ -243,7 +184,6 @@ function ItemsChild({
                   placeholder="small size"
                   value={item.fields[2]}
                   disabled={!item.disableField}
-                  // onChange={() => showModal(item.fields, item.itemId)}
                 />
                 <Input
                   style={{ margin: "2px" }}
@@ -251,7 +191,6 @@ function ItemsChild({
                   placeholder="small size"
                   value={item.fields[3]}
                   disabled={!item.disableField}
-                  // onChange={() => showModal(item.fields, item.itemId)}
                 />
               </div>
             </Card>

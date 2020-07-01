@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Card, Col, Row, Button } from "antd";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React from "react";
+import { Card, Button } from "antd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import "./AreaParent.css";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
@@ -16,7 +16,8 @@ function AreaChild({
   handleChangeColor,
   onItemFieldEdit,
   setDisabledFields,
-  onActiveDataSelect
+  onActiveDataSelect,
+  onRemoveItem
 }) {
   const getListStyle = (isDraggingOver, area) => ({
     background: isDraggingOver ? "lightblue" : "white",
@@ -93,6 +94,8 @@ function AreaChild({
                     {items.map((item, index) => (
                       <ItemChild
                         key={item.itemId}
+                        areaId={area.areaId}
+                        onRemoveItem={onRemoveItem}
                         item={item}
                         createItem={createItem}
                         index={index}

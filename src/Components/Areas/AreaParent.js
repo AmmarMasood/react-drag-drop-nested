@@ -13,20 +13,22 @@ function AreaParent({ roomId }) {
   // current added area dimensions input
   // stores the temp value of x and y
   const [tempDimension, setTempDimension] = useState({ x: 1, y: 1 });
-  const [areaIdn, setAreaIdn] = useState(`area-${Date.now() + Math.random()}`);
+  // const [areaIdn, setAreaIdn] = useState(`area-${Date.now() + Math.random()}`);
   // const [itemIdn, setItemIdn] = useState(`item-${Date.now() + Math.random()}`);
   const [state, setState] = useState({
     areas: {
+      // modal data for testing
       // [areaIdn]: {
       //   roomId: roomId,
       //   areaTitle: "New Area",
       //   areaId: areaIdn,
-      //   itemIds: [],
+      //   itemIds: [itemIdn],
       //   x: 1,
       //   y: 1
       // }
     },
     items: {
+      // modal data for testing
       // [itemIdn]: {
       //   itemTitle: "Item 1",
       //   roomId: roomId,
@@ -126,6 +128,36 @@ function AreaParent({ roomId }) {
     // axios.post(`${server}/add-area`, state)
     // .then(res => console.log(res))
     // .catch(err => console.log(err))
+  };
+
+  const onRemoveItem = (itemId, areaId, itemTitle) => {
+    const itemtitle = itemTitle.replace(/^\D+/g, "");
+    const newAreaItemIds = state.areas[areaId].itemIds.filter(
+      e => e !== itemId
+    );
+
+    const newItemTitles = state.itemTitles.filter(
+      e => e !== parseInt(itemtitle)
+    );
+
+    const newState = {
+      ...state,
+      areas: {
+        ...state.areas,
+        [areaId]: {
+          ...state.areas[areaId],
+          itemIds: newAreaItemIds
+        }
+      },
+      itemTitles: newItemTitles
+    };
+    delete newState.items[itemId];
+    setState(newState);
+    // backend script to save the area in backend
+    // axios.post(`${server}/add-area`, state)
+    // .then(res => console.log(res))
+    // .catch(err => console.log(err))
+    return;
   };
 
   const onItemFieldEdit = (fields, itemId) => {
@@ -478,6 +510,7 @@ function AreaParent({ roomId }) {
                         handleChangeColor={handleChangeColor}
                         onItemFieldEdit={onItemFieldEdit}
                         setDisabledFields={setDisabledFields}
+                        onRemoveItem={onRemoveItem}
                         onActiveDataSelect={onActiveDataSelect}
                       />
                     );
